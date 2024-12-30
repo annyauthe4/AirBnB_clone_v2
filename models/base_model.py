@@ -17,6 +17,12 @@ class BaseModel:
 
             # Ensure 'id' is set even if not provided in kwargs
             self.id = kwargs.get('id', str(uuid.uuid4()))
+            self.created_at = kwargs.get(
+                'created_at', datetime.now()
+            )
+            self.updated_at = kwargs.get(
+                'updated_at', datetime.now()
+            )
         else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
@@ -50,10 +56,8 @@ class BaseModel:
 
     def to_dict(self):
         """Convert instance into dict format"""
-        dictionary = {}
-        dictionary.update(self.__dict__)
-        dictionary.update({'__class__':
-                          (str(type(self)).split('.')[-1]).split('\'')[0]})
+        dictionary = self.__dict__.copy() # Avoid modifying original __dict_
+        dictionary.update({'__class__': self.__class__.__name__})
         dictionary['created_at'] = self.created_at.isoformat()
         dictionary['updated_at'] = self.updated_at.isoformat()
         return dictionary

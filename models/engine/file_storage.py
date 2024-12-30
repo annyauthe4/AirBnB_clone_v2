@@ -16,13 +16,13 @@ class FileStorage:
         """Adds new object to storage dictionary"""
         if obj:
             key = "{}.{}".format(obj.__class__.__name__, obj.id)
-            self.__objects[key] = obj
+            FileStorage.__objects[key] = obj
 
     def save(self):
         """Saves storage dictionary to file"""
         with open(self.__file_path, 'w') as f:
             temp = {key: obj.to_dict() for key, obj \
-                in self.__objects.items()}
+                in FileStorage.__objects.items()}
             """
             temp.update(FileStorage.__objects)
             for key, val in temp.items():
@@ -51,8 +51,9 @@ class FileStorage:
                 temp = json.load(f)
                 for key, val in temp.items():
                     cls_name = value["__class__"]
-                    cls = self.classes[cls_name]
-                    self.__objects[key] = cls(**value)
+                    if cls_name in classes:
+                        cls = classes[cls_name]
+                        FileStorage.__objects[key] = cls(**val)
                     # self.all()[key] = classes[val['__class__']](**val)
         except FileNotFoundError:
             pass
