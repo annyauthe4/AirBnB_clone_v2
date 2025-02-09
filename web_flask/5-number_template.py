@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 """
-This program starts a Flask web application, displays greeting
-and takes user input to be displayed.
+This program starts a Flask web application, display greetings
+and uses Jinja to render HTNL page if number.
 """
 
 
-from flask import Flask
+from flask import Flask, render_template
 app = Flask(__name__)
 
 
@@ -23,22 +23,28 @@ def hbnb():
 
 @app.route('/c/<text>', strict_slashes=False)
 def c_is_fun(text):
-    """Returns C with input text."""
+    """Return C with user input."""
     return f"C " + text.replace('_', ' ')
 
 
 @app.route('/python/', strict_slashes=False)
 @app.route('/python/<text>', strict_slashes=False)
-def python_cool(text='is cool'):
-    """Return python with user input or default."""
+def python_is_fun(text='is cool'):
+    """Return greeting with input or default."""
     return f"Python " + text.replace('_', ' ')
 
 
 @app.route('/number/<int:n>', strict_slashes=False)
 def is_a_number(n):
-    """Return input n is a number."""
+    """Returns n and a text."""
     return "{:d} is a number".format(n)
 
 
+@app.route('/number_template/<int:n>', strict_slashes=False)
+def render_html_page(n):
+    """Render html page if n is a number."""
+    return render_template('5-number.html', n=n)
+
+
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', post=5000)
